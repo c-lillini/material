@@ -1,13 +1,10 @@
 describe('$materialDialog', function() {
   
-  beforeEach(module('material.components.dialog'));
+  beforeEach(module('material.components.dialog', 'ngAnimateMock'));
 
   beforeEach(inject(function spyOnMaterialEffects($materialEffects) {
     spyOn($materialEffects, 'popIn').andCallFake(function(element, parent, targetEvent, cb) {
       parent.append(element);
-      cb();
-    });
-    spyOn($materialEffects, 'popOut').andCallFake(function(element, parent, cb) {
       cb();
     });
   }));
@@ -28,7 +25,7 @@ describe('$materialDialog', function() {
     expect(container.length).toBe(1);
   }));
 
-  it('should escapeToClose == true', inject(function($materialDialog, $rootScope, $rootElement, $timeout, $materialEffects) {
+  it('should escapeToClose == true', inject(function($materialDialog, $rootScope, $rootElement, $timeout, $materialEffects, $animate) {
     var parent = angular.element('<div>');
     $materialDialog({
       template: '<material-dialog>',
@@ -42,11 +39,11 @@ describe('$materialDialog', function() {
     TestUtil.triggerEvent($rootElement, 'keyup', { keyCode: Constant.KEY_CODE.ESCAPE });
 
     $timeout.flush();
-    expect($materialEffects.popOut).toHaveBeenCalled();
+    $animate.triggerCallbacks();
     expect(parent.find('material-dialog').length).toBe(0);
   }));
 
-  it('should escapeToClose == false', inject(function($materialDialog, $rootScope, $rootElement, $timeout, $materialEffects) {
+  it('should escapeToClose == false', inject(function($materialDialog, $rootScope, $rootElement, $timeout, $materialEffects, $animate) {
     var parent = angular.element('<div>');
     $materialDialog({
       template: '<material-dialog>',
@@ -60,11 +57,11 @@ describe('$materialDialog', function() {
     TestUtil.triggerEvent($rootElement, 'keyup', { keyCode: Constant.KEY_CODE.ESCAPE });
 
     $timeout.flush();
-    expect($materialEffects.popOut).not.toHaveBeenCalled();
+    $animate.triggerCallbacks();
     expect(parent.find('material-dialog').length).toBe(1);
   }));
 
-  it('should clickOutsideToClose == true', inject(function($materialDialog, $rootScope, $timeout, $materialEffects) {
+  it('should clickOutsideToClose == true', inject(function($materialDialog, $rootScope, $timeout, $materialEffects, $animate) {
 
     var parent = angular.element('<div>');
     $materialDialog({
@@ -82,11 +79,11 @@ describe('$materialDialog', function() {
     });
     $timeout.flush();
 
-    expect($materialEffects.popOut).toHaveBeenCalled();
+    $animate.triggerCallbacks();
     expect(parent.find('material-dialog').length).toBe(0);
   }));
 
-  it('should clickOutsideToClose == false', inject(function($materialDialog, $rootScope, $timeout, $materialEffects) {
+  it('should clickOutsideToClose == false', inject(function($materialDialog, $rootScope, $timeout, $materialEffects, $animate) {
 
     var parent = angular.element('<div>');
     $materialDialog({
@@ -103,8 +100,8 @@ describe('$materialDialog', function() {
       target: container[0]
     });
     $timeout.flush();
+    $animate.triggerCallbacks();
 
-    expect($materialEffects.popOut).not.toHaveBeenCalled();
     expect(parent.find('material-dialog').length).toBe(1);
   }));
 

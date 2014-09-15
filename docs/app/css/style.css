@@ -111,36 +111,43 @@ pre > code.highlight {
 
 .demo-container {
   margin-top: 30px;
-  height: 668px;
-  -webkit-transition: height 0.4s ease-in-out;
-  transition: height 0.4s ease-in-out;
+  height: 664px;
+  -webkit-transition: 0.2s height ease-in-out;
+  transition: 0.2s height ease-in-out;
 }
 .demo-container.show-source {
-  height: 1117px;
+  height: 1112px;
 }
 
-iframe.demo {
-  width: 100%;
+.demo-content {
+  background: #fff;
+  z-index: 1;
   height: 600px;
-  border: none;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  -webkit-transition: -webkit-transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+  -webkit-transform: translate3d(0, -448px, 0);
+  transform: translate3d(0, -448px, 0);
 }
-.show-source .demo-frame-container {
+.show-source .demo-content {
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
-.demo-frame-container {
-  background: #fff;
-  z-index: 1;
-  -webkit-transform: translate3d(0, -448px, 0);
-  transform: translate3d(0, -448px, 0);
-  -webkit-transition: -webkit-transform .3s ease-in-out;
-  transition: transform .3s ease-in-out;
+.demo-source-tabs {
+  opacity: 0;
+  -webkit-transition: opacity 0.2s linear;
+  transition: opacity 0.2s linear;
+}
+.show-source .demo-source-tabs {
+  opacity: 1;
 }
 
+
 material-toolbar.demo-toolbar,
-.demo-container material-tabs material-tab {
+.demo-source-tabs material-tab,
+.demo-source-tabs .tabs-header {
   background: #00BCD4;
   color: white;
 }
@@ -163,14 +170,7 @@ material-toolbar.demo-toolbar material-button {
   border: 1px solid #ddd;
   background-color: #f6f6f6;
   height:400px;
-  opacity: 0;
-  transition: opacity 0.2s linear;
-  -webkit-transition: opacity 0.2s linear;
 }
-.show-source .demo-source-container {
-  opacity: 1;
-}
-
 .demo-source-content {
   height: 400px;
 }

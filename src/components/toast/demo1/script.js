@@ -1,5 +1,5 @@
 
-angular.module('app', ['ngMaterial'])
+angular.module('toastDemo1', ['ngMaterial'])
 
 .controller('AppCtrl', function($scope, $materialToast, $animate) {
   

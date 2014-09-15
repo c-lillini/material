@@ -38,8 +38,9 @@ module.exports = {
     js: [
       'bower_components/angularytics/dist/angularytics.js',
       'dist/angular-material.js',
-      'dist/docs/js/**/*.js',
       'bower_components/hammerjs/hammer.js',
+      'dist/docs/js/**/*.js',
+      'dist/docs/generated/**/demo/**/*.js',
     ],
     css: [
       'dist/angular-material.css',

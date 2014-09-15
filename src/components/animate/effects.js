@@ -35,6 +35,10 @@ angular.module('material.animations', [
  */
 function MaterialEffects($rootElement, $position, $$rAF, $sniffer) {
 
+  var styler = angular.isDefined( $rootElement[0].animate ) ? 'webAnimations' :
+               angular.isDefined( window['TweenMax'] || window['TweenLite'] ) ? 'gsap'   :
+               angular.isDefined( window['jQuery'] ) ? 'jQuery' : 'default';
+
   var webkit = /webkit/i.test($sniffer.vendorPrefix);
   function vendorProperty(name) {
     return webkit ? 
@@ -46,7 +50,6 @@ function MaterialEffects($rootElement, $position, $$rAF, $sniffer) {
   // Publish API for effects...
   return self = {
     popIn: popIn,
-    popOut: popOut,
 
     /* Constants */
     TRANSITIONEND_EVENT: 'transitionend' + (webkit ? ' webkitTransitionEnd' : ''),
@@ -65,7 +68,6 @@ function MaterialEffects($rootElement, $position, $$rAF, $sniffer) {
   // **********************************************************
   // API Methods
   // **********************************************************
-
   /**
    *
    */
@@ -74,10 +76,10 @@ function MaterialEffects($rootElement, $position, $$rAF, $sniffer) {
 
     var startPos;
     if (clickElement) {
-      var clickPos = $position.offset(clickElement);
+      var clickRect = clickElement[0].getBoundingClientRect();
       startPos = translateString(
-        clickPos.left - element[0].offsetWidth / 2,
-        clickPos.top - element[0].offsetHeight / 2, 
+        clickRect.left - element[0].offsetWidth,
+        clickRect.top - element[0].offsetHeight, 
         0
       ) + ' scale(0.2)';
     } else {
@@ -107,29 +109,6 @@ function MaterialEffects($rootElement, $position, $$rAF, $sniffer) {
     }
   }
 
-  /**
-   *
-   *
-   */
-  function popOut(element, parentElement, done) {
-    var endPos = $position.positionElements(parentElement, element, 'bottom-center');
-
-    element
-      .css(self.TRANSFORM, 
-           translateString(endPos.left, endPos.top, 0) + ' scale(0.5)')
-      .css('opacity', 0)
-      .on(self.TRANSITIONEND_EVENT, finished);
-
-    function finished(ev) {
-      //Make sure this transitionend didn't bubble up from a child
-      if (ev.target === element[0]) {
-        element.off(self.TRANSITIONEND_EVENT, finished);
-        (done || angular.noop)();
-      }
-    }
-  }
-
-
   // **********************************************************
   // Utility Methods
   // **********************************************************
@@ -137,26 +116,6 @@ function MaterialEffects($rootElement, $position, $$rAF, $sniffer) {
 
   function translateString(x, y, z) {
     return 'translate3d(' + Math.floor(x) + 'px,' + Math.floor(y) + 'px,' + Math.floor(z) + 'px)';
-  }
-
-
-  /**
-   * Support values such as 0.65 secs or 650 msecs
-   */
-  function safeDuration(value) {
-    var duration = isNaN(value) ? 0 : Number(value);
-    return (duration < 1.0) ? (duration * 1000) : duration;
-  }
-
-  /**
-   * Convert all values to decimal;
-   * eg 150 msecs -> 0.15sec
-   */
-  function safeVelocity(value) {
-    var duration = isNaN(value) ? 0 : Number(value);
-    return (duration > 100) ? (duration / 1000) :
-      (duration > 10 ) ? (duration / 100) :
-        (duration > 1  ) ? (duration / 10) : duration;
   }
 
 }

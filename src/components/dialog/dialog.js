@@ -187,7 +187,7 @@ function MaterialDialogService($timeout, $materialCompiler, $rootElement, $rootS
         if (options.clickOutsideToClose) {
           element.off('click', dialogClickOutside);
         }
-        $materialEffects.popOut(element, options.appendTo, function() {
+        $animate.leave(element, function() {
           element.remove();
           scope.$destroy();
           scope = null;
